@@ -1,0 +1,34 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    - always_declare_return_types
+    - avoid_empty_else
+    - avoid_print
+    - avoid_unnecessary_containers
+    - avoid_unused_constructor_parameters
+    - avoid_void_async
+    - cancel_subscriptions
+    - close_sinks
+    - comment_references
+    - directives_ordering
+    - empty_statements
+    - flutter_style_todos
+    - literal_only_boolean_expressions
+    - no_adjacent_strings_in_list
+    - no_duplicate_case_values
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_final_fields
+    - prefer_final_locals
+    - prefer_single_quotes
+    - sort_child_properties_last
+    - test_types_in_equals
+    - throw_in_finally
+    - unnecessary_statements
+    - use_key_in_widget_constructors
+
+analyzer:
+  errors:
+    missing_required_param: error
+    missing_return: error
