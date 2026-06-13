@@ -5,7 +5,8 @@ import '../../core/constants/app_constants.dart';
 import '../../core/constants/app_routes.dart';
 import '../../core/utils/currency_formatter.dart';
 import '../../data/models/order_model.dart';
-import '../../data/repositories/review_repository.dart';
+import '../../data/repositories/interfaces/repository_interfaces.dart';
+import '../controllers/auth_controller.dart';
 import '../widgets/common/corn_app_bar.dart';
 import '../widgets/empty_state_widget.dart';
 import '../widgets/animations/animation_widgets.dart';
@@ -30,12 +31,14 @@ class _OrdersPageState extends State<OrdersPage> {
   }
 
   Future<void> _load() async {
-    await Future.delayed(const Duration(milliseconds: 800));
-    if (mounted) {
-      setState(() {
-        _orders    = OrderRepository.getDummyOrders();
-        _isLoading = false;
-      });
+    try {
+      final auth      = Get.find<AuthController>();
+      final orderRepo = Get.find<IOrderRepository>();
+      final userId    = auth.currentUser.value?.id ?? '';
+      final orders    = await orderRepo.getOrders(userId);
+      if (mounted) setState(() { _orders = orders; _isLoading = false; });
+    } catch (_) {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 

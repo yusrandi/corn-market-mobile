@@ -1,7 +1,10 @@
-import 'package:corn_market/core/constants/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:get/get.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/constants/app_routes.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -40,36 +43,30 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _logoCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 800));
+    _logoCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
     _logoScale = CurvedAnimation(parent: _logoCtrl, curve: Curves.elasticOut)
         .drive(Tween(begin: 0.0, end: 1.0));
     _logoFade = CurvedAnimation(parent: _logoCtrl, curve: Curves.easeIn)
         .drive(Tween(begin: 0.0, end: 1.0));
 
-    _growCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 600));
+    _growCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
     _grow = CurvedAnimation(parent: _growCtrl, curve: Curves.elasticOut)
         .drive(Tween(begin: 0.6, end: 1.0));
 
-    _textCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+    _textCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
     _textSlide = CurvedAnimation(parent: _textCtrl, curve: Curves.easeOutCubic)
         .drive(Tween(begin: const Offset(0, 0.4), end: Offset.zero));
     _textFade = CurvedAnimation(parent: _textCtrl, curve: Curves.easeIn)
         .drive(Tween(begin: 0.0, end: 1.0));
 
-    _tagCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 400));
+    _tagCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _tagFade = CurvedAnimation(parent: _tagCtrl, curve: Curves.easeIn)
         .drive(Tween(begin: 0.0, end: 1.0));
 
-    _dotCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 900))
+    _dotCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
       ..repeat();
 
-    _exitCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 400));
+    _exitCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _exitFade = CurvedAnimation(parent: _exitCtrl, curve: Curves.easeIn)
         .drive(Tween(begin: 1.0, end: 0.0));
 
@@ -88,8 +85,31 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     _dotCtrl.stop();
     await _exitCtrl.forward();
 
-    // Check onboarding seen
-    Get.offAllNamed(AppRoutes.onboarding);
+    // Smart routing: check session & onboarding
+    await _smartRoute();
+  }
+
+  Future<void> _smartRoute() async {
+    try {
+      final prefs  = await SharedPreferences.getInstance();
+      final seen   = prefs.getBool('onboarding_seen') ?? false;
+      final client = Supabase.instance.client;
+      final session = client.auth.currentSession;
+
+      if (session != null) {
+        // Already logged in → skip to main
+        Get.offAllNamed(AppRoutes.main);
+      } else if (!seen) {
+        // First time → onboarding
+        await prefs.setBool('onboarding_seen', true);
+        Get.offAllNamed(AppRoutes.onboarding);
+      } else {
+        // Returning user, not logged in → login
+        Get.offAllNamed(AppRoutes.login);
+      }
+    } catch (_) {
+      Get.offAllNamed(AppRoutes.login);
+    }
   }
 
   @override
@@ -129,18 +149,9 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
             ),
 
             // Corner decorations
-            Positioned(
-                top: -40,
-                left: -40,
-                child: _CornerDot(size: 140, opacity: 0.06)),
-            Positioned(
-                bottom: -60,
-                right: -60,
-                child: _CornerDot(size: 200, opacity: 0.05)),
-            Positioned(
-                top: 120,
-                right: -20,
-                child: _CornerDot(size: 80, opacity: 0.08)),
+            Positioned(top: -40, left: -40, child: _CornerDot(size: 140, opacity: 0.06)),
+            Positioned(bottom: -60, right: -60, child: _CornerDot(size: 200, opacity: 0.05)),
+            Positioned(top: 120, right: -20, child: _CornerDot(size: 80, opacity: 0.08)),
 
             // Main content
             Center(

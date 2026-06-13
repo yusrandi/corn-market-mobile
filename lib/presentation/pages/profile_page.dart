@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
@@ -30,7 +31,7 @@ class ProfilePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined, size: 20),
-            onPressed: () {},
+            onPressed: () => _pickAndUploadAvatar(context, auth),
           ),
         ],
       ),
@@ -186,6 +187,14 @@ class ProfilePage extends StatelessWidget {
         ]),
       ),
     );
+  }
+
+
+  Future<void> _pickAndUploadAvatar(BuildContext context, AuthController auth) async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+    if (picked == null) return;
+    await auth.updateProfile(avatarPath: picked.path);
   }
 
   void _confirmLogout(AuthController auth) {

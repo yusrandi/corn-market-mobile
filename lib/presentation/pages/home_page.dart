@@ -1,3 +1,4 @@
+import 'package:corn_market/presentation/widgets/shimmer/shimmer_box.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
@@ -15,7 +16,6 @@ import '../widgets/stats_banner.dart';
 import '../widgets/animations/animation_widgets.dart';
 import '../widgets/shimmer/shimmer_product_card.dart';
 import '../widgets/shimmer/shimmer_misc.dart';
-import '../widgets/shimmer/shimmer_box.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -43,34 +43,34 @@ class _HomeBody extends StatelessWidget {
     return Obx(() {
       // ── Full shimmer skeleton while loading ──────────────────────────────
       if (ctrl.isLoading.value) {
-        return SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
+        return const SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: AppConstants.spacingMD),
-              const ShimmerBanner(),
-              const SizedBox(height: AppConstants.spacingLG),
+              SizedBox(height: AppConstants.spacingMD),
+              ShimmerBanner(),
+              SizedBox(height: AppConstants.spacingLG),
               // stats placeholder
               Padding(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                     horizontal: AppConstants.horizontalPadding),
                 child: ShimmerBox(
                     width: double.infinity,
                     height: 80,
                     borderRadius: AppConstants.radiusLG),
               ),
-              const SizedBox(height: AppConstants.spacingLG),
-              const ShimmerSectionHeader(),
-              const SizedBox(height: AppConstants.spacingMD),
-              const ShimmerProductRow(),
-              const SizedBox(height: AppConstants.spacingLG),
-              const ShimmerSectionHeader(),
-              const SizedBox(height: AppConstants.spacingMD),
-              const ShimmerCategoryTabs(),
-              const SizedBox(height: AppConstants.spacingMD),
-              const ShimmerProductGrid(count: 4),
-              const SizedBox(height: AppConstants.spacingXL),
+              SizedBox(height: AppConstants.spacingLG),
+              ShimmerSectionHeader(),
+              SizedBox(height: AppConstants.spacingMD),
+              ShimmerProductRow(),
+              SizedBox(height: AppConstants.spacingLG),
+              ShimmerSectionHeader(),
+              SizedBox(height: AppConstants.spacingMD),
+              ShimmerCategoryTabs(),
+              SizedBox(height: AppConstants.spacingMD),
+              ShimmerProductGrid(count: 4),
+              SizedBox(height: AppConstants.spacingXL),
             ],
           ),
         );

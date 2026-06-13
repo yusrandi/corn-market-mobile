@@ -1,94 +1,77 @@
-# 🌽 CornMarket - E-Commerce Penjualan Jagung
+# 🌽 CornMarket — E-Commerce Penjualan Jagung
 
-Aplikasi Flutter e-commerce untuk penjualan jagung dengan desain minimalis modern dan tema jagung khas Kalimantan.
+Aplikasi Flutter e-commerce lengkap untuk penjualan jagung dengan desain minimalis modern, tema jagung Kalimantan, dark mode, dan clean architecture.
 
 ---
 
-## 🏗️ Arsitektur
-
-Project ini menggunakan **Clean Architecture** dengan struktur folder sebagai berikut:
+## 📁 Struktur Clean Architecture
 
 ```
 lib/
-├── core/                     # Layer inti aplikasi
-│   ├── constants/            # Konstanta global (spacing, radius, dll)
-│   ├── theme/                # Tema, warna, dan typography
-│   └── utils/                # Utility & helper functions
+├── core/
+│   ├── constants/      → AppConstants, AppRoutes
+│   ├── theme/          → AppColors, AppTextStyles, AppTheme (light & dark)
+│   └── utils/          → CurrencyFormatter
 │
-├── data/                     # Layer data
-│   ├── models/               # Data models (ProductModel, BannerModel, dll)
-│   └── repositories/         # Repository & sumber data
+├── data/
+│   ├── models/         → ProductModel, CartItemModel, OrderModel,
+│   │                     ReviewModel, UserModel, BannerModel, CategoryModel
+│   └── repositories/   → ProductRepository, ReviewRepository, OrderRepository
 │
-└── presentation/             # Layer UI
-    ├── controllers/          # GetX controllers (business logic)
-    ├── pages/                # Halaman/screen utama
-    └── widgets/              # Widget reusable
+└── presentation/
+    ├── controllers/    → HomeController, AuthController, CartController,
+    │                     FavoritesController, ThemeController, MainController
+    ├── pages/          → 11 halaman lengkap
+    └── widgets/        → Widget reusable + common/
 ```
 
 ---
 
-## 🚀 Teknologi yang Digunakan
+## 📱 Halaman Lengkap
 
-| Teknologi       | Kegunaan                    |
-|-----------------|-----------------------------|
-| **Flutter**     | Framework UI                |
-| **GetX**        | State management & routing  |
-| **Google Fonts**| Custom font (Poppins)       |
-| **Intl**        | Format mata uang Rupiah     |
+| Halaman            | Fitur Utama                                          |
+|--------------------|------------------------------------------------------|
+| **Login**          | Validasi form, demo login, navigasi ke Register      |
+| **Register**       | Form lengkap, toggle password                        |
+| **Home**           | Banner slider, produk populer, kategori, search      |
+| **Kategori**       | Grid kategori, sort (harga/rating), filter range harga |
+| **Detail Produk**  | Hero image, qty selector, rating summary, ulasan     |
+| **Keranjang**      | Qty +/−, subtotal, gratis ongkir threshold           |
+| **Checkout**       | Alamat, pilih pembayaran, ringkasan biaya            |
+| **Order Success**  | Animasi sukses, info pesanan                         |
+| **Riwayat Pesanan**| Daftar pesanan + status badge                        |
+| **Detail Pesanan** | Tracking timeline, detail produk, ringkasan bayar    |
+| **Profil**         | Stats, dark mode toggle, menu pengaturan, logout     |
 
 ---
 
 ## 🎨 Design System
 
-### Warna
-| Token             | Hex       | Fungsi                  |
-|-------------------|-----------|-------------------------|
-| `primary`         | `#F5C518` | Kuning jagung (CTA)     |
-| `secondary`       | `#2D6A4F` | Hijau daun (harga)      |
-| `background`      | `#FFF8E7` | Background utama        |
-| `textPrimary`     | `#1A1A2E` | Teks utama              |
-
-### Typography
-- **Font:** Poppins (Google Fonts)
-- **Display:** 32px / Bold
-- **Headline:** 18-24px / SemiBold
-- **Body:** 13-14px / Regular
-- **Label:** 12px / Medium
+| Token           | Light              | Dark               |
+|-----------------|--------------------|--------------------|
+| Background      | `#FFF8E7` krem     | `#0F1117` gelap    |
+| Surface         | `#FFFFFF` putih    | `#1C1F26` abu tua  |
+| Primary         | `#F5C518` kuning jagung | sama          |
+| Secondary       | `#2D6A4F` hijau daun | `#52B788` terang |
+| Font            | Poppins via Google Fonts | sama         |
 
 ---
 
-## 📱 Fitur Homepage
-
-- ✅ **App Bar** - Logo CornMarket + lokasi + search + cart dengan badge
-- ✅ **Search Bar** - Animasi muncul/hilang dengan filter real-time
-- ✅ **Banner Slider** - Promo dengan page indicator animasi
-- ✅ **Stats Banner** - Statistik platform (petani, jenis, rating, pelanggan)
-- ✅ **Produk Populer** - Horizontal scroll dengan ProductCard
-- ✅ **Category Tabs** - Filter kategori dengan animasi pill
-- ✅ **Product Grid** - 2 kolom responsive dengan lazy loading
-- ✅ **Bottom Navigation** - 5 tab dengan animasi aktif
-- ✅ **Empty State** - Tampilan saat produk tidak ditemukan
-
----
-
-## ⚙️ Cara Menjalankan
+## 🚀 Cara Menjalankan
 
 ```bash
-# Install dependencies
+cd corn_market
 flutter pub get
-
-# Jalankan di emulator/device
 flutter run
-
-# Build APK
-flutter build apk --release
 ```
+
+> Login Demo: gunakan tombol **"Login Demo"** di halaman login, atau isi email & password apa saja (min 6 karakter).
 
 ---
 
-## 📝 Catatan
+## 🛠 Stack
 
-- Gambar menggunakan URL Unsplash (butuh koneksi internet)
-- Data produk menggunakan dummy data lokal
-- Font Poppins di-load via Google Fonts CDN
-- Untuk produksi, tambahkan API service layer di `data/repositories/`
+- **Flutter** 3.x + **Dart** 3.x
+- **GetX** — state management, routing, dependency injection
+- **Google Fonts** — Poppins
+- **Intl** — format Rupiah

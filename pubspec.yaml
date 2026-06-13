@@ -13,8 +13,14 @@ dependencies:
   # State Management
   get: ^4.6.6
 
+  # ── Supabase ──────────────────────────────────
+  supabase_flutter: ^2.3.4      # Auth, DB, Realtime, Storage
+  # ─────────────────────────────────────────────
+
   # Fonts
   google_fonts: ^6.1.0
+  image_picker: ^1.1.2          # Upload foto produk/avatar
+  file_picker: ^8.0.3           # Upload file alternatif
 
   # UI
   cached_network_image: ^3.3.1
@@ -23,6 +29,8 @@ dependencies:
 
   # Utils
   intl: ^0.19.0
+  uuid: ^4.4.0                  # Generate UUID lokal
+  shared_preferences: ^2.2.3    # Simpan onboarding flag
 
 dev_dependencies:
   flutter_test:

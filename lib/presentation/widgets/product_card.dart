@@ -73,6 +73,16 @@ class ProductCard extends StatelessWidget {
               const SizedBox(width: 4),
               Text('(${product.reviewCount})', style: AppTextStyles.labelLarge.copyWith(color: txtHnt)),
             ]),
+            const SizedBox(height: 4),
+            // Live stock indicator
+            if (product.stock < 20)
+              Row(children: [
+                Container(width: 6, height: 6,
+                  decoration: const BoxDecoration(color: AppColors.warning, shape: BoxShape.circle)),
+                const SizedBox(width: 4),
+                Text('Stok tersisa \${product.stock}', style: AppTextStyles.labelSmall.copyWith(
+                    color: AppColors.warning, fontWeight: FontWeight.w600)),
+              ]),
             const SizedBox(height: 8),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center, children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

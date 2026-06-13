@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_routes.dart';
-import 'presentation/controllers/auth_controller.dart';
-import 'presentation/controllers/cart_controller.dart';
-import 'presentation/controllers/favorites_controller.dart';
-import 'presentation/controllers/home_controller.dart';
-import 'presentation/controllers/main_controller.dart';
-import 'presentation/controllers/theme_controller.dart';
+import 'core/config/supabase_config.dart';
+import 'core/config/app_bindings.dart';
 import 'presentation/pages/splash_page.dart';
 import 'presentation/pages/onboarding_page.dart';
 import 'presentation/pages/login_page.dart';
@@ -19,9 +17,20 @@ import 'presentation/pages/checkout_page.dart';
 import 'presentation/pages/order_success_page.dart';
 import 'presentation/pages/orders_page.dart';
 import 'presentation/pages/order_detail_page.dart';
+import 'presentation/controllers/theme_controller.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // ── Supabase init ──────────────────────────────────────────
+  await Supabase.initialize(
+    url: SupabaseConfig.url,
+    anonKey: SupabaseConfig.anonKey,
+    realtimeClientOptions: const RealtimeClientOptions(
+      logLevel: RealtimeLogLevel.info,
+    ),
+  );
+
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
@@ -29,6 +38,7 @@ void main() {
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   runApp(const CornMarketApp());
 }
 
@@ -37,12 +47,8 @@ class CornMarketApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ThemeController(), permanent: true);
-    Get.put(AuthController(), permanent: true);
-    Get.put(CartController(), permanent: true);
-    Get.put(FavoritesController(), permanent: true);
-    Get.put(MainController(), permanent: true);
-    Get.put(HomeController(), permanent: true);
+    // Init bindings (DI)
+    AppBindings().dependencies();
 
     final themeCtrl = Get.find<ThemeController>();
 
@@ -58,32 +64,27 @@ class CornMarketApp extends StatelessWidget {
           getPages: [
             GetPage(name: AppRoutes.splash, page: () => const SplashPage()),
             GetPage(
-              name: AppRoutes.onboarding,
-              page: () => const OnboardingPage(),
-              transition: Transition.fade,
-            ),
+                name: AppRoutes.onboarding,
+                page: () => const OnboardingPage(),
+                transition: Transition.fade),
             GetPage(
-              name: AppRoutes.login,
-              page: () => LoginPage(),
-              transition: Transition.fadeIn,
-            ),
+                name: AppRoutes.login,
+                page: () => LoginPage(),
+                transition: Transition.fadeIn),
             GetPage(name: AppRoutes.register, page: () => RegisterPage()),
             GetPage(
-              name: AppRoutes.main,
-              page: () => const MainShell(),
-              transition: Transition.fadeIn,
-            ),
+                name: AppRoutes.main,
+                page: () => const MainShell(),
+                transition: Transition.fadeIn),
             GetPage(
-              name: AppRoutes.detail,
-              page: () => const ProductDetailPage(),
-              transition: Transition.downToUp,
-            ),
+                name: AppRoutes.detail,
+                page: () => const ProductDetailPage(),
+                transition: Transition.downToUp),
             GetPage(name: AppRoutes.checkout, page: () => const CheckoutPage()),
             GetPage(
-              name: AppRoutes.orderSuccess,
-              page: () => const OrderSuccessPage(),
-              transition: Transition.zoom,
-            ),
+                name: AppRoutes.orderSuccess,
+                page: () => const OrderSuccessPage(),
+                transition: Transition.zoom),
             GetPage(name: AppRoutes.orders, page: () => const OrdersPage()),
             GetPage(
                 name: AppRoutes.orderDetail,
