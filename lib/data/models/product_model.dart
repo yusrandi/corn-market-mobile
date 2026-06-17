@@ -13,6 +13,10 @@ class ProductModel {
   final bool isNew;
   final int stock;
   final String origin;
+  // Store info
+  final String? storeId;
+  final String storeName;
+  final String? sellerId; // ← owner_id dari tabel stores
 
   const ProductModel({
     required this.id,
@@ -29,5 +33,8 @@ class ProductModel {
     this.isNew = false,
     required this.stock,
     required this.origin,
+    this.storeId,
+    this.storeName = 'CornMarket Official',
+    this.sellerId,
   });
 }

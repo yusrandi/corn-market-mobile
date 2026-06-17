@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:corn_market/core/config/supabase_config.dart';
-import 'package:corn_market/data/models/banner_model.dart';
-import 'package:corn_market/data/models/category_model.dart';
-import 'package:corn_market/data/models/product_model.dart';
-import 'package:corn_market/data/repositories/interfaces/repository_interfaces.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import './interfaces/repository_interfaces.dart';
+import '../models/product_model.dart';
+import '../models/banner_model.dart';
+import '../models/category_model.dart';
+import '../../core/config/supabase_config.dart';
 
 class SupabaseProductRepository implements IProductRepository {
   final _db = Supabase.instance.client;
@@ -16,7 +16,10 @@ class SupabaseProductRepository implements IProductRepository {
     String? categorySlug,
     String? query,
   }) async {
-    var q = _db.from('products').select().eq('is_active', true);
+    var q = _db
+        .from('products')
+        .select('*, stores(owner_id, name)')
+        .eq('is_active', true);
 
     if (categorySlug != null && categorySlug != 'all') {
       q = q.eq('category_slug', categorySlug);
@@ -34,7 +37,7 @@ class SupabaseProductRepository implements IProductRepository {
   Future<List<ProductModel>> getPopularProducts() async {
     final data = await _db
         .from('products')
-        .select()
+        .select('*, stores(owner_id, name)')
         .eq('is_active', true)
         .eq('is_popular', true)
         .order('rating', ascending: false)
@@ -46,7 +49,7 @@ class SupabaseProductRepository implements IProductRepository {
   Future<List<ProductModel>> getNewProducts() async {
     final data = await _db
         .from('products')
-        .select()
+        .select('*, stores(owner_id, name)')
         .eq('is_active', true)
         .eq('is_new', true)
         .order('created_at', ascending: false)
@@ -56,7 +59,11 @@ class SupabaseProductRepository implements IProductRepository {
 
   @override
   Future<ProductModel?> getProductById(String id) async {
-    final data = await _db.from('products').select().eq('id', id).maybeSingle();
+    final data = await _db
+        .from('products')
+        .select('*, stores(owner_id, name)')
+        .eq('id', id)
+        .maybeSingle();
     if (data == null) return null;
     return _productFromMap(data);
   }
@@ -120,22 +127,31 @@ class SupabaseProductRepository implements IProductRepository {
 
   // ── Mappers ───────────────────────────────────────────────
 
-  ProductModel _productFromMap(Map<String, dynamic> m) => ProductModel(
-        id: m['id'] as String,
-        name: m['name'] as String,
-        description: m['description'] as String? ?? '',
-        price: (m['price'] as num).toDouble(),
-        pricePerUnit: (m['price_per_unit'] as num).toDouble(),
-        unit: m['unit'] as String? ?? 'kg',
-        imageUrl: m['image_url'] as String? ?? '',
-        category: m['category_slug'] as String? ?? '',
-        rating: (m['rating'] as num?)?.toDouble() ?? 0,
-        reviewCount: m['review_count'] as int? ?? 0,
-        isPopular: m['is_popular'] as bool? ?? false,
-        isNew: m['is_new'] as bool? ?? false,
-        stock: m['stock'] as int? ?? 0,
-        origin: m['origin'] as String? ?? '',
-      );
+  ProductModel _productFromMap(Map<String, dynamic> m) {
+    // stores join result: bisa Map atau null
+    final storeJoin = m['stores'] as Map<String, dynamic>?;
+    return ProductModel(
+      id: m['id'] as String,
+      name: m['name'] as String,
+      description: m['description'] as String? ?? '',
+      price: (m['price'] as num).toDouble(),
+      pricePerUnit: (m['price_per_unit'] as num).toDouble(),
+      unit: m['unit'] as String? ?? 'kg',
+      imageUrl: m['image_url'] as String? ?? '',
+      category: m['category_slug'] as String? ?? '',
+      rating: (m['rating'] as num?)?.toDouble() ?? 0,
+      reviewCount: m['review_count'] as int? ?? 0,
+      isPopular: m['is_popular'] as bool? ?? false,
+      isNew: m['is_new'] as bool? ?? false,
+      stock: m['stock'] as int? ?? 0,
+      origin: m['origin'] as String? ?? '',
+      storeId: m['store_id'] as String?,
+      storeName: m['store_name'] as String? ??
+          storeJoin?['name'] as String? ??
+          'CornMarket Official',
+      sellerId: storeJoin?['owner_id'] as String?,
+    );
+  }
 
   CategoryModel _categoryFromMap(Map<String, dynamic> m) => CategoryModel(
         id: m['slug'] as String,

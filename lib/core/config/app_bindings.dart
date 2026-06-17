@@ -5,6 +5,7 @@ import 'package:corn_market/data/repositories/supabase_product_repository.dart';
 import 'package:corn_market/data/repositories/supabase_review_repository.dart';
 import 'package:corn_market/presentation/controllers/auth_controller.dart';
 import 'package:corn_market/presentation/controllers/cart_controller.dart';
+import 'package:corn_market/presentation/controllers/chat_controller.dart';
 import 'package:corn_market/presentation/controllers/favorites_controller.dart';
 import 'package:corn_market/presentation/controllers/home_controller.dart';
 import 'package:corn_market/presentation/controllers/main_controller.dart';
@@ -43,6 +44,7 @@ class AppBindings extends Bindings {
       AuthController(authRepo: Get.find<IAuthRepository>()),
       permanent: true,
     );
+    Get.put(ChatController(), permanent: true);
     Get.put(
       HomeController(
         productRepo: Get.find<IProductRepository>(),

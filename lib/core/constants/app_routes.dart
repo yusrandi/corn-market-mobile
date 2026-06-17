@@ -14,4 +14,6 @@ class AppRoutes {
   static const String orderDetail = '/order-detail';
   static const String profile = '/profile';
   static const String favorites = '/favorites';
+  static const String chat = '/chat';
+  static const String chatInbox = '/chat-inbox';
 }

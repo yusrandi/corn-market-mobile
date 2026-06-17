@@ -17,6 +17,8 @@ import 'presentation/pages/checkout_page.dart';
 import 'presentation/pages/order_success_page.dart';
 import 'presentation/pages/orders_page.dart';
 import 'presentation/pages/order_detail_page.dart';
+import 'presentation/pages/chat_page.dart';
+import 'presentation/pages/chat_inbox_page.dart';
 import 'presentation/controllers/theme_controller.dart';
 
 Future<void> main() async {
@@ -85,6 +87,14 @@ class CornMarketApp extends StatelessWidget {
                 name: AppRoutes.orderSuccess,
                 page: () => const OrderSuccessPage(),
                 transition: Transition.zoom),
+            GetPage(
+                name: AppRoutes.chat,
+                page: () => const ChatPage(),
+                transition: Transition.downToUp),
+            GetPage(
+                name: AppRoutes.chatInbox,
+                page: () => const ChatInboxPage(),
+                transition: Transition.downToUp),
             GetPage(name: AppRoutes.orders, page: () => const OrdersPage()),
             GetPage(
                 name: AppRoutes.orderDetail,
